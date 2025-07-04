@@ -7,3 +7,6 @@ sudo apt install git python3 python3-venv python3-pip -y
 curl -fsSL https://ollama.com/install.sh | sh
 ollama pull mistral
 ollama run mistral
+
+
+clone MALont repo , kibrum posted in discord cti
