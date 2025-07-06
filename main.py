@@ -63,16 +63,16 @@ malont_objects = [get_label(obj) for obj in object_properties]
 malont_class_str = ", ".join(malont_classes[:15])
 malont_object_str = ", ".join(malont_objects[:15])
 
-prompt = PromptTemplate.from_template(f"""
+prompt = PromptTemplate.from_template("""
 You are a cybersecurity analyst.
 
 From the text below, extract all cybersecurity-relevant knowledge in the form of subject-predicate-object triples.
 
 Use only these entity types:
-{malont_classes}
+{{malont_classes}}
 
 Use only these relationship types:
-{malont_objects}
+{{malont_objects}}
 
 Output as a JSON array of objects with keys: "subject", "predicate", "object".
 
@@ -85,21 +85,22 @@ Text:
 
 Output:
 [
-  {
+  {{
     "subject": "APT28",
     "predicate": "uses",
     "object": "CVE-2017-11774"
-  },
-  {
+  }},
+  {{
     "subject": "APT28",
     "predicate": "targets",
     "object": "government agencies"
-  }
+  }}
 ]
 
 Now extract from this:
 \"\"\"{{text}}\"\"\"
 """)
+
 
 
 
@@ -130,3 +131,4 @@ for i, chunk in enumerate(chunks):
 
         print("[!] Could not parse output:")
         print(response)
+
