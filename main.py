@@ -1,4 +1,3 @@
-
 import json
 from docling.document_converter import DocumentConverter
 from docling_core.transforms.chunker import HierarchicalChunker
@@ -7,7 +6,7 @@ from langchain_community.llms import Ollama
 
 
 class CyberTripleExtractor:
-    def __init__(self, file_path, model_name="tinyllama"):
+    def __init__(self, file_path, model_name="mistral"):
         self.file_path = file_path
         self.converter = DocumentConverter()
         self.chunker = HierarchicalChunker()
@@ -53,6 +52,7 @@ class CyberTripleExtractor:
         """
 
         self.valid_triples = []
+        self.chunk_data = []
 
     def run(self):
         print("Loading and converting document...")
@@ -62,23 +62,56 @@ class CyberTripleExtractor:
         print("Chunking document...")
         chunks = list(self.chunker.chunk(dl_doc=doc))
 
+        chunk_results = []
+
         print("Extracting triples...")
         for i, chunk in enumerate(chunks):
+            chunk_text = str(chunk)
+            chunk_triples = []
             print(f"\n--- Chunk {i + 1} ---")
             try:
-                prompt = self.prompt_template.replace("{{text}}", str(chunk))
+                prompt = self.prompt_template.format(text=chunk_text)
                 response = self.llm.invoke(prompt)
                 triples = json.loads(response)
+
                 for t in triples:
+                    if not all(isinstance(t.get(k), str) for k in ("subject", "predicate", "object")):
+                        print(f" Skipping invalid triple (non-string values): {t}")
+                        continue
+
                     if self._is_valid_triple(t):
                         self.valid_triples.append(t)
+                        chunk_triples.append(t)
                         print(f"{t['subject']} —{t['predicate']}→ {t['object']}")
                     else:
                         print(f"Suspicious triple: {t}")
             except Exception as e:
                 print(f"Error parsing chunk {i + 1}: {e}")
+            chunk_results.append((i,chunk_text,chunk_triples))
+        return chunk_results
 
-        return self.valid_triples
+
+    def build_dict(self,chunk_results):
+        self.chunk_data = []
+        for i,text,triples in chunk_results:
+            self.chunk_data.append({
+                "chunk_index" : i,
+                "chunk_text": text,
+                "triples": triples,
+                "context": {
+                    "source_file": self.file_path,
+                    "estimated_section": f"Chunk {i + 1}",
+                }
+            })
+        return self.chunk_data
+
+    def save_to_json(self, output_path = "chunk_data.json"):
+        try:
+            with open (output_path, "w", encoding="utf-8") as f:
+                json.dump(self.chunk_data,f,indent = 2, ensure_ascii= False)
+            print("file saved")
+        except Exception as e:
+            print("failed")
 
     def _is_valid_triple(self, triple):
         return (
@@ -90,8 +123,13 @@ class CyberTripleExtractor:
 
 if __name__ == "__main__":
     extractor = CyberTripleExtractor("sample1.pdf")
-    triples = extractor.run()
 
-    print("\nExtracted Triples:")
-    for t in triples:
-        print(f"{t['subject']} —{t['predicate']}→ {t['object']}")
+    # Run extraction
+    raw_chunk_results = extractor.run()
+
+    # Build structured dictionary
+    chunk_dict = extractor.build_dict(raw_chunk_results)
+
+    # Save the result to a JSON file
+    extractor.save_to_json("my_chunks.json")
+
