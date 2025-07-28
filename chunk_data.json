@@ -1,0 +1,11 @@
+[
+  {
+    "chunk_index": 0,
+    "chunk_text": "text='Input:  A  hitherto  unknown  attack  group  has  been  observed  targeting  a  materials  research organization  in  Asia.  The  group,  which  Symantec  calls  Clasiopa,  is  characterized  by  a  distinct toolset, which includes one piece of custom malware (Backdoor.Atharvan). At present, there is no firm evidence on where Clasiopa is based or whom it acts on behalf.' meta=DocMeta(schema_name='docling_core.transforms.chunker.DocMeta', version='1.0.0', doc_items=[TextItem(self_ref='#/texts/0', parent=RefItem(cref='#/body'), children=[], content_layer=<ContentLayer.BODY: 'body'>, label=<DocItemLabel.TEXT: 'text'>, prov=[ProvenanceItem(page_no=1, bbox=BoundingBox(l=31.19, t=804.3860146484375, r=564.098, b=708.2460146484375, coord_origin=<CoordOrigin.BOTTOMLEFT: 'BOTTOMLEFT'>), charspan=(0, 372))], orig='Input:  A  hitherto  unknown  attack  group  has  been  observed  targeting  a  materials  research organization  in  Asia.  The  group,  which  Symantec  calls  Clasiopa,  is  characterized  by  a  distinct toolset, which includes one piece of custom malware (Backdoor.Atharvan). At present, there is no firm evidence on where Clasiopa is based or whom it acts on behalf.', text='Input:  A  hitherto  unknown  attack  group  has  been  observed  targeting  a  materials  research organization  in  Asia.  The  group,  which  Symantec  calls  Clasiopa,  is  characterized  by  a  distinct toolset, which includes one piece of custom malware (Backdoor.Atharvan). At present, there is no firm evidence on where Clasiopa is based or whom it acts on behalf.', formatting=None, hyperlink=None)], headings=None, captions=None, origin=DocumentOrigin(mimetype='application/pdf', binary_hash=12473098072190084592, filename='sample2.pdf', uri=None))",
+    "llm_response/triples": " Named Entities: (Entity, Type), ('Clasiopa', 'attacker group'), (Entity, Type), ('Backdoor.Atharvan', 'tool')\n        Relationships: ('Clasiopa', 'uses', 'Backdoor.Atharvan')",
+    "context": {
+      "source_file": "sample2.pdf",
+      "estimated_section": "Chunk 1"
+    }
+  }
+]
