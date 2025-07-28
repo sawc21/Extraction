@@ -46,12 +46,12 @@ for i, link in enumerate(box_links):
         download_button = wait.until(EC.element_to_be_clickable((By.XPATH, '//button[.//span[text()="Download"]]')))
         download_button.click()
 
-        print("✅ Download clicked. Waiting for file...")
+        print("Download clicked. Waiting for file...")
 
         time.sleep(10)  # Wait for download to finish
 
     except Exception as e:
-        print(f"❌ Failed for: {link}\nReason: {e}")
+        print(f"Failed for: {link}\nReason: {e}")
 
 driver.quit()
 print("\nAll done. Files downloaded to:", download_dir)
